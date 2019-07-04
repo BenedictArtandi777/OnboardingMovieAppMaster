@@ -7,6 +7,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +29,9 @@ import com.example.movieapp.di.component.MovieComponent;
 import com.example.movieapp.model.MovieDetailModel;
 import com.example.movieapp.model.MovieModel;
 import com.example.movieapp.model.VideoTrailerModel;
+import com.example.movieapp.view.adapter.MovieTrailerAdapter;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -62,9 +66,14 @@ public class DetailMovieFragment extends BaseFragment implements MovieDetailView
     LinearLayout movieDetailContainer;
     @BindView(R.id.iv_movie_detail_poster)
     ImageView ivMovieDetailPoster;
+    @BindView(R.id.rv_movie_trailer)
+    RecyclerView rvMovieTrailer;
 
     @Inject
     MovieDetailPresenter movieDetailPresenter;
+
+    @Inject
+    MovieTrailerAdapter movieTrailerAdapter;
 
     Unbinder unbinder;
 
@@ -92,7 +101,10 @@ public class DetailMovieFragment extends BaseFragment implements MovieDetailView
         movieDetailPresenter.removeFavouriteMovie(getMovieID());
     }
 
-
+    public void InitRecylerView(){
+        rvMovieTrailer.setLayoutManager(new LinearLayoutManager(context()));
+        rvMovieTrailer.setAdapter(movieTrailerAdapter);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -109,6 +121,7 @@ public class DetailMovieFragment extends BaseFragment implements MovieDetailView
         super.onViewCreated(view, savedInstanceState);
         if(savedInstanceState == null){
             this.loadDetails();
+            InitRecylerView();
         }
     }
 
@@ -128,6 +141,13 @@ public class DetailMovieFragment extends BaseFragment implements MovieDetailView
             tvRating.setText(movieModel.getMovieRate()+"/10");
             tvDescription.setText(movieModel.getSynopsis());
             Glide.with(getContext()).load(movieModel.getUrlPoster()).into(ivMovieDetailPoster);
+        }
+    }
+
+    @Override
+    public void initializeTrailer(Collection<VideoTrailerModel> videoTrailerModels) {
+        if(videoTrailerModels != null){
+            movieTrailerAdapter.addVideoTrailerCollection(videoTrailerModels);
         }
     }
 

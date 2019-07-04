@@ -105,6 +105,22 @@
             android:layout_height="wrap_content"
             android:textSize="10dp"
             android:text="lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet lorem impsum dolor sir amet "/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#000000"
+            android:layout_marginTop="10dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trailer"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_movie_trailer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
 

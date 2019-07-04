@@ -2,8 +2,10 @@ package com.example.movieapp.mapper;
 
 import com.example.domain.model.Movie;
 import com.example.domain.model.MovieDetail;
+import com.example.domain.model.Video;
 import com.example.movieapp.model.MovieDetailModel;
 import com.example.movieapp.model.MovieModel;
+import com.example.movieapp.model.VideoTrailerModel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +32,28 @@ public class MovieDataMapper {
         }
 
         return movieModelCollection;
+    }
+
+    public Collection<VideoTrailerModel> trailerTransform(Collection<Video> videoCollection){
+        Collection<VideoTrailerModel> videoTrailerModelCollection;
+        if(videoCollection != null && !videoCollection.isEmpty()){
+            videoTrailerModelCollection = new ArrayList<>();
+            for (Video video: videoCollection) {
+                videoTrailerModelCollection.add(trailerTransform(video));
+            }
+        }else {
+            videoTrailerModelCollection = Collections.EMPTY_LIST;
+        }
+        return videoTrailerModelCollection;
+    }
+
+    public VideoTrailerModel trailerTransform(Video video){
+        VideoTrailerModel videoTrailerModel = new VideoTrailerModel();
+        videoTrailerModel.setKey(video.getKey());
+        videoTrailerModel.setName(video.getName());
+        videoTrailerModel.setSite(video.getSite());
+        videoTrailerModel.setVideoId(video.getVideoId());
+        return videoTrailerModel;
     }
 
     public MovieDetailModel detailTransform(MovieDetail movieDetail){

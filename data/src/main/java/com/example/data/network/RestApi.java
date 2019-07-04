@@ -37,6 +37,6 @@ public interface RestApi {
     @GET("movie/{movieId}")
     Observable<MovieEntity> getMovieDetailsRetrofit(@Path("movieId") int id);
 
-    @GET("/movie/{movie_id}/videos")
+    @GET("movie/{movie_id}/videos")
     Observable<VideoTrailerResult> getVideoTrailerById(@Path("movie_id") int movieId);
 }

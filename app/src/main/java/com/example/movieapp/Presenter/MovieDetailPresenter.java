@@ -4,12 +4,16 @@ import com.example.domain.interactor.AddFavouriteMovie;
 import com.example.domain.interactor.CheckFavourite;
 import com.example.domain.interactor.DefaultObserver;
 import com.example.domain.interactor.GetMovieDetail;
+import com.example.domain.interactor.GetMovieVideo;
 import com.example.domain.interactor.RemoveFavourite;
 import com.example.domain.model.Movie;
 import com.example.domain.model.MovieDetail;
+import com.example.domain.model.Video;
 import com.example.movieapp.ViewInterface.MovieDetailView;
 import com.example.movieapp.mapper.MovieDataMapper;
 import com.example.movieapp.model.MovieDetailModel;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -21,14 +25,16 @@ public class MovieDetailPresenter implements BasePresenter {
     private AddFavouriteMovie addFavouriteMovie;
     private CheckFavourite checkFavourite;
     private RemoveFavourite removeFavourite;
+    private GetMovieVideo getMovieVideo;
 
     @Inject
-    public MovieDetailPresenter(GetMovieDetail getMovieDetail, MovieDataMapper movieModelDataMapper, AddFavouriteMovie addFavouriteMovie, CheckFavourite checkFavourite,RemoveFavourite removeFavourite) {
+    public MovieDetailPresenter(GetMovieDetail getMovieDetail, MovieDataMapper movieModelDataMapper, AddFavouriteMovie addFavouriteMovie, CheckFavourite checkFavourite,RemoveFavourite removeFavourite,GetMovieVideo getMovieVideo) {
         this.getMovieDetail = getMovieDetail;
         this.movieModelDataMapper = movieModelDataMapper;
         this.addFavouriteMovie = addFavouriteMovie;
         this.checkFavourite = checkFavourite;
         this.removeFavourite = removeFavourite;
+        this.getMovieVideo = getMovieVideo;
     }
 
     public void setView(MovieDetailView movieDetailsView) {
@@ -101,6 +107,7 @@ public class MovieDetailPresenter implements BasePresenter {
                         MovieDetailModel movieDetailModel = movieModelDataMapper.detailTransform(movieDetail);
                         movieDetailsView.initializeMovieDetail(movieDetailModel);
                         checkFavourite(movieId);
+                        getMovieVideos(movieId);
                         hideViewLoading();
                     }
                     @Override
@@ -108,6 +115,21 @@ public class MovieDetailPresenter implements BasePresenter {
                         showErrorMessage(e.toString());
                     }
                 }, movieId);
+    }
+
+    private void getMovieVideos(String movieId){
+        this.getMovieVideo
+                .execute(new DefaultObserver<List<Video>>(){
+                    @Override
+                    public void onNext(List<Video> videos) {
+                        movieDetailsView.initializeTrailer(movieModelDataMapper.trailerTransform(videos));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showErrorMessage(e.toString());
+                    }
+                },Integer.valueOf(movieId));
     }
 
     private void showViewLoading() {
